@@ -79,7 +79,7 @@ class SiteConf:
     def init_config(self):
         try:
             with open(os.path.join(Config().get_inner_config_path(),
-                                   "sites.dat"),
+                                   "sites2.dat"),
                       "rb") as f:
                 self._RSS_SITE_GRAP_CONF = pickle.load(f).get("conf")
         except Exception as err:

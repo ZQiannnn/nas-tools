@@ -16,7 +16,7 @@ class IndexerHelper:
     def init_config(self):
         try:
             with open(os.path.join(Config().get_inner_config_path(),
-                                   "sites.dat"),
+                                   "sites2.dat"),
                       "rb") as f:
                 self._indexers = pickle.load(f).get("indexer")
         except Exception as err:

@@ -923,6 +923,7 @@ def indexer():
     indexers = Indexer().get_builtin_indexers(check=False)
     private_count = len([item.id for item in indexers if not item.public])
     public_count = len([item.id for item in indexers if item.public])
+    print("public_count=====%d" % public_count)
     return render_template("setting/indexer.html",
                            Config=Config().get_config(),
                            PrivateCount=private_count,
