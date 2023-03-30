@@ -84,6 +84,22 @@ class BuiltinIndexer(_IIndexClient):
                     _indexer_domains.append(indexer.domain)
                     indexer.name = site.get("name")
                     ret_indexers.append(indexer)
+
+        for site, attr in self.sites.get_public_sites():
+            indexer = IndexerHelper().get_indexer(url=site,
+                                                  public=True,
+                                                  proxy=attr.get("proxy"),
+                                                  render=attr.get("render"),
+                                                  language=attr.get("language"),
+                                                  parser=attr.get("parser"))
+            if indexer:
+                if indexer_id and indexer.id == indexer_id:
+                    return indexer
+                if check and indexer_sites and indexer.id not in indexer_sites:
+                    continue
+                if indexer.domain not in _indexer_domains:
+                    _indexer_domains.append(indexer.domain)
+                    ret_indexers.append(indexer)
         return ret_indexers
 
     def search(self, order_seq,

@@ -10,6 +10,68 @@ from config import Config
 
 @singleton
 class Sites:
+    PUBLIC_TORRENT_SITES = {
+        'rarbg.to': {
+            "parser": "rarbg",
+            "proxy": True,
+            "language": "en"
+        },
+        'dmhy.org': {
+            "proxy": True
+        },
+        'eztv.re': {
+            "proxy": True,
+            "language": "en"
+        },
+        'acg.rip': {
+            "proxy": False
+        },
+        'thepiratebay.org': {
+            "proxy": True,
+            "render": True,
+            "language": "en"
+        },
+        'nyaa.si': {
+            "proxy": True,
+            "language": "en"
+        },
+        '1337x.to': {
+            "proxy": True,
+            "language": "en"
+        },
+        'ext.to': {
+            "proxy": True,
+            "language": "en"
+        },
+        'torrentgalaxy.to': {
+            "proxy": True,
+            "language": "en"
+        },
+        'mikanani.me': {
+            "proxy": False
+        },
+        'gaoqing.fm': {
+            "proxy": False
+        },
+        'www.mp4ba.vip': {
+            "proxy": False,
+            "referer": True
+        },
+        'www.miobt.com': {
+            "proxy": True
+        },
+        'katcr.to': {
+            "proxy": True,
+            "language": "en"
+        },
+        'btsow.quest': {
+            "proxy": True
+        },
+        'www.hdpianyuan.com': {
+            "proxy": False
+        }
+    }
+
     message = None
     dbhelper = None
 
@@ -135,6 +197,16 @@ class Sites:
         if siteid or siteurl:
             return {}
         return ret_sites
+
+    def get_public_sites(self, url=None):
+        """
+        查询所有公开BT站点
+        """
+        if url:
+            _, netloc = StringUtils.get_url_netloc(url)
+            return self.PUBLIC_TORRENT_SITES.get(netloc)
+        else:
+            return self.PUBLIC_TORRENT_SITES.items()
 
     def get_sites_by_suffix(self, suffix):
         """
