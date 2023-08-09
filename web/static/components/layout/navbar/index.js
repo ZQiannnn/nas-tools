@@ -24,17 +24,21 @@ export class LayoutNavbar extends CustomElement {
     this._update_appversion = "";
     this._update_url = "https://github.com/NAStool/nas-tools";
     this._is_update = false;
+    this._is_expand = false;
     this.classList.add("navbar","navbar-vertical","navbar-expand-lg","lit-navbar-fixed","lit-navbar","lit-navbar-hide-scrollbar");
-
     // 加载菜单
     Golbal.get_cache_or_ajax("get_user_menus", "usermenus", {},
       (ret) => {
         if (ret.code === 0) {
           this.navbar_list = ret.menus;
-          this._init_page();
         }
-      }
+      },false
     );
+  }
+
+  firstUpdated() {
+    // 初始化页面
+    this._init_page();
   }
 
   _init_page() {
@@ -55,7 +59,9 @@ export class LayoutNavbar extends CustomElement {
         navmenu(page);
       }
       // 默认展开探索
-      setTimeout(() => { this.show_collapse("ranking") }, 200);
+      if (!this._is_expand) {
+        this.show_collapse("ranking");
+      }
     }
 
     // 删除logo动画 加点延迟切换体验好
@@ -63,6 +69,7 @@ export class LayoutNavbar extends CustomElement {
       document.querySelector("#logo_animation").remove();
       this.removeAttribute("hidden");
       document.querySelector("#page_content").removeAttribute("hidden");
+      document.querySelector("#main_bottom_menubar").classList.remove('d-none');
       document.querySelector("layout-searchbar").removeAttribute("hidden");
     }, 200);
 
@@ -115,11 +122,12 @@ export class LayoutNavbar extends CustomElement {
   }
 
   show_collapse(page) {
-    for (const item of this.querySelectorAll("[id^='lit-navbar-collapse-']")) {
+    for (const item of this.querySelectorAll("div[id^='lit-navbar-collapse-']")) {
       for (const a of item.querySelectorAll("a")) {
         if (page === a.getAttribute("data-lit-page")) {
           item.classList.add("show");
           this.querySelectorAll(`button[data-bs-target='#${item.id}']`)[0].classList.remove("collapsed");
+          this._is_expand = true;
           return;
         }
       }
@@ -128,115 +136,6 @@ export class LayoutNavbar extends CustomElement {
 
   render() {
     return html`
-      <style>
-        
-        .navbar {
-          min-height: 3rem !important;
-        }
-        
-        .navbar .input-group-flat:focus-within {
-          box-shadow: none;
-        }
-        
-        .nav-search-bar {
-          padding-top: calc(env(safe-area-inset-top) + var(--safe-area-inset-top)) !important;
-          padding-left: env(safe-area-inset-left) !important;
-        }
-        
-        .lit-navar-close {
-            margin-top: calc(env(safe-area-inset-top) + var(--safe-area-inset-top)) !important;
-        }
-
-        .lit-navbar-fixed {
-          position:fixed;
-          top:0;
-          left:0;
-          z-index:1031
-        }
-
-        .lit-navbar-canvas {
-          width:calc(var(--tblr-offcanvas-width) - 120px)!important;
-        }
-
-        .theme-light .lit-navbar-canvas {
-          background-color: rgb(231, 235, 239);
-        }
-
-        .lit-navar-close {
-          position:fixed;
-          top:0;
-          left:calc(var(--tblr-offcanvas-width) - 120px);
-          z-index:var(--tblr-offcanvas-zindex);
-          width: 80px;
-        }
-
-        .lit-navbar-hide-scrollbar {
-          overflow-y: scroll!important;
-          scrollbar-width: none!important;
-          -ms-overflow-style: none!important;
-        }
-
-        .lit-navbar-hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-
-        .lit-navbar-nav {
-          max-height:none!important;
-        }
-
-        .theme-light .lit-navbar {
-          background-color: rgb(231, 235, 239, 0.5);
-        }
-        
-        .lit-navbar-logo {
-          height:3rem;
-          width:auto;
-        }
-
-        .theme-dark .lit-navbar-logo {
-          filter: invert(1) grayscale(100%) brightness(200%);
-        }
-
-        /* 屏蔽lg以下顶栏 */
-        @media (max-width: 992px) {
-          .lit-navbar {
-            max-height:0!important;
-            min-height:0!important;
-            padding:0!important;
-            margin:0!important;
-          }
-        }
-
-        .theme-dark .lit-navbar-accordion-button {
-
-        }
-        .theme-light .lit-navbar-accordion-button {
-
-        }
-        .lit-navbar-accordion-button::after {
-          
-        }
-
-        .lit-navbar-accordion-item, .lit-navbar-accordion-item-active {
-          border-radius:0.5rem;
-        }
-
-        .theme-dark .lit-navbar-accordion-item:hover {
-          background-color: #2a3551ca!important;
-        }
-        .theme-light .lit-navbar-accordion-item:hover {
-          background-color: #fcfafec5!important;
-        }
-
-        .theme-dark .lit-navbar-accordion-item-active {
-          background-color: #414d6dca!important;
-        }
-        .theme-light .lit-navbar-accordion-item-active {
-          background-color: rgba(123, 178, 233, 0.5)!important;
-          color: #000!important;
-        }
-
-      </style>
       <div class="container-fluid">
         <div class="offcanvas offcanvas-start d-flex lit-navbar-canvas shadow" tabindex="-1" id="litLayoutNavbar">
           <div class="d-flex flex-row flex-grow-1 lit-navbar-hide-scrollbar">
