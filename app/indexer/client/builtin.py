@@ -27,7 +27,7 @@ class BuiltinIndexer(_IIndexClient):
 
     # 私有属性
     _client_config = {}
-    _show_more_sites = True
+    _show_more_sites = False
     progress = None
     sites = None
     dbhelper = None
